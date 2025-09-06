@@ -15,27 +15,44 @@ class BrandPhones extends StatefulWidget {
 }
 
 class _BrandPhonesState extends State<BrandPhones> {
-  
   List<dynamic> phones = [];
-  
+  bool _isLoading = true;
+  String? _error;
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     fetchPhones();
   }
-  
-  Future<void> fetchPhones() async{
-    final uri = Uri.parse('https://www.thephonepedia.com/api/phones/brand/${widget.brandId}');
-    final response = await http.get(uri);
-    if(response.statusCode==200){
-      if(mounted){
+
+  Future<void> fetchPhones() async {
+    final uri = Uri.parse(
+        'https://www.thephonepedia.com/api/phones/brand/${widget.brandId}');
+    try {
+      final response =
+      await http.get(uri).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        if (mounted) {
+          setState(() {
+            phones = jsonDecode(response.body);
+            _isLoading = false;
+          });
+        }
+      } else {
         setState(() {
-          phones = jsonDecode(response.body);
+          _error = 'Failed to load (status ${response.statusCode})';
+          _isLoading = false;
         });
       }
+    } catch (e) {
+      setState(() {
+        _error = 'Error: $e';
+        _isLoading = false;
+      });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,77 +67,81 @@ class _BrandPhonesState extends State<BrandPhones> {
             );
           },
         ),
-        title: Text('Brand Phones',style: GoogleFonts.notoSans(
-          fontSize: 25,
-          fontWeight: FontWeight.w900,
-          color: Colors.white,
-        ),
+        title: Text(
+          'Brand Phones',
+          style: GoogleFonts.notoSans(
+            fontSize: 25,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: Colors.lightBlue,
       ),
       drawer: const CustomDrawer(),
-      body: GridView.builder(
-        padding: EdgeInsets.only(
-          left: 40,
-          right: 40,
-        ),
-            // padding: EdgeInsets.all(8),
-            itemCount: phones.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                crossAxisSpacing: 2,
-                mainAxisSpacing: 3,
-                childAspectRatio: 1,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-            final Map<String,dynamic> phone = phones[index];
-            final imageUrl = phone['image_url'] != null
-                ? 'https://www.thephonepedia.com/images/${Uri.encodeComponent(phone['image_url'])}'
-                : null;
-            return GestureDetector(
-              onTap: (){
-                context.push('/details',extra: phone);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 30
-                ),
-                child: Card(
-                  elevation: 4,
-                  shadowColor: Colors.black54,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    // side: const BorderSide(
-                    //   color: Colors.lightBlue,
-                    //   width: 2,
-                    // ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
+          ? Center(child: Text(_error!))
+          : phones.isEmpty
+          ? const Center(child: Text("No phones found"))
+          : ListView.builder(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 16, vertical: 12),
+        itemCount: phones.length,
+        itemBuilder: (BuildContext context, int index) {
+          final Map<String, dynamic> phone = phones[index];
+          final imageUrl = phone['image_url'] != null
+              ? 'https://www.thephonepedia.com/images/${Uri.encodeComponent(phone['image_url'])}'
+              : null;
+
+          return GestureDetector(
+            onTap: () {
+              context.push('/details', extra: phone);
+            },
+            child: Card(
+              elevation: 4,
+              shadowColor: Colors.black54,
+              margin: const EdgeInsets.only(bottom: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Phone Image
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: imageUrl != null
+                        ? Image.network(
+                      imageUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder:
+                          (context, error, stackTrace) {
+                        return const Icon(Icons.broken_image,
+                            size: 80, color: Colors.grey);
+                      },
+                    )
+                        : const Icon(Icons.broken_image,
+                        size: 80, color: Colors.grey),
                   ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Image.network(
-                          imageUrl!,
-                          height: 220,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.broken_image, size: 80, color: Colors.grey);
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(phone['name'], style: GoogleFonts.lato(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),),
-                        ),
-                      ],
+                  // Phone Name
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      phone['name'],
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.lato(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            );
-          },
-      )
+            ),
+          );
+        },
+      ),
     );
   }
 }

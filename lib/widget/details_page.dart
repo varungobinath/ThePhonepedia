@@ -36,7 +36,6 @@ class DetailsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          // --- Add phone image here ---
             Center(
               child: Image.network(
                 imageUrl!=null?imageUrl:'',
@@ -57,8 +56,6 @@ class DetailsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-
-          // Loop through each group
           for (final group in specsGroups) buildSpecGroup(group),
         ],
       ),
