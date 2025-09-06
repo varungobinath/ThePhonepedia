@@ -26,6 +26,7 @@ class _LatestPhonesState extends State<LatestPhones> {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
+      print(jsonData);
       return jsonData;
     } else {
       throw Exception('Failed to load latest phones');

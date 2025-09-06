@@ -37,10 +37,9 @@ class DetailsPage extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         children: [
           // --- Add phone image here ---
-          if (imageUrl != null)
             Center(
               child: Image.network(
-                imageUrl,
+                imageUrl!=null?imageUrl:'',
                 height: 220,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {

@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
             Text(
               'ThePhonepedia',
               style: GoogleFonts.notoSans(
-                fontSize: 25,
+                fontSize: 23,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
               ),
