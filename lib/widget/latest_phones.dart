@@ -25,7 +25,7 @@ class _LatestPhonesState extends State<LatestPhones> {
   Future<void> fetchLatestPhones() async {
     final url = Uri.parse('https://www.thephonepedia.com/api/latest/');
     try {
-      final response = await http.get(url).timeout(const Duration(seconds: 10));
+      final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);

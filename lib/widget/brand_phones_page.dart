@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -108,32 +107,35 @@ class _BrandPhonesState extends State<BrandPhones> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Phone Image
-                  AspectRatio(
-                    aspectRatio: 16 / 9,
+                  // Consistent Image Area
+                  Container(
+                    height: 200,
+                    alignment: Alignment.center,
                     child: imageUrl != null
                         ? Image.network(
                       imageUrl,
                       fit: BoxFit.contain,
-                      errorBuilder:
-                          (context, error, stackTrace) {
+                      errorBuilder: (context, error, stackTrace) {
                         return const Icon(Icons.broken_image,
-                            size: 80, color: Colors.grey);
+                            size: 90, color: Colors.grey);
                       },
                     )
                         : const Icon(Icons.broken_image,
-                        size: 80, color: Colors.grey),
+                        size: 90, color: Colors.grey),
                   ),
-                  // Phone Name
-                  Padding(
+
+                  // Consistent Text Area
+                  Container(
                     padding: const EdgeInsets.all(12.0),
+                    alignment: Alignment.center,
                     child: Text(
                       phone['name'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.lato(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                      softWrap: true, // allow wrapping
                     ),
                   ),
                 ],
