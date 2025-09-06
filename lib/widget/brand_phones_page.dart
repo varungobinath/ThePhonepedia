@@ -25,7 +25,7 @@ class _BrandPhonesState extends State<BrandPhones> {
   }
   
   Future<void> fetchPhones() async{
-    final uri = Uri.parse('https://10.0.2.2:80/api/phones/brand/${widget.brandId}');
+    final uri = Uri.parse('https://www.thephonepedia.com/api/phones/brand/${widget.brandId}');
     final response = await http.get(uri);
     if(response.statusCode==200){
       if(mounted){
@@ -75,7 +75,7 @@ class _BrandPhonesState extends State<BrandPhones> {
             itemBuilder: (BuildContext context, int index) {
             final Map<String,dynamic> phone = phones[index];
             final imageUrl = phone['image_url'] != null
-                ? 'https://10.0.2.2:80/images/${Uri.encodeComponent(phone['image_url'])}'
+                ? 'https://www.thephonepedia.com/images/${Uri.encodeComponent(phone['image_url'])}'
                 : null;
             return GestureDetector(
               onTap: (){

@@ -22,7 +22,7 @@ class _TrendingPhonesState extends State<TrendingPhones> {
   }
 
   Future<List<dynamic>> fetchTrendingPhones() async {
-    final url = Uri.parse('https://10.0.2.2:80/api/trendingphones/');
+    final url = Uri.parse('https://www.thephonepedia.com/api/trendingphones/');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -78,13 +78,18 @@ class _TrendingPhonesState extends State<TrendingPhones> {
                         child: Column(
                           children: [
                             Expanded(
-                              child: Image.network(
-                                "https://10.0.2.2:80/images/${Uri.encodeComponent(phone['image_url'])}"?? '',
-                                fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.broken_image, size: 80, color: Colors.grey);
-                                  }
-                              ),
+                              child: phone['image_url'] != null
+                                  ? Image.network(
+                                      "https://www.thephonepedia.com/images/${Uri.encodeComponent(phone['image_url'])}",
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(Icons.broken_image,
+                                            size: 80, color: Colors.grey);
+                                      },
+                                    )
+                                  : const Icon(Icons.broken_image,
+                                      size: 80, color: Colors.grey),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),

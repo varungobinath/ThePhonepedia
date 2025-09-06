@@ -27,7 +27,7 @@ class _BrandsPageState extends State<BrandsPage> {
   Future<void> fetchBrands() async {
     // print('Fetching brands...');
     try {
-      final uri = Uri.parse('https://10.0.2.2:80/api/phones/brands');
+      final uri = Uri.parse('https://www.thephonepedia.com/api/phones/brands');
       final response = await http.get(uri);
       if (response.statusCode == 200) {
         // print('Brands fetched successfully');

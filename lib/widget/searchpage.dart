@@ -23,7 +23,7 @@ class _SearchPageState extends State<SearchPage> {
     }
     setState(() => isLoading = true);
 
-    final url = Uri.parse('https://10.0.2.2:80/api/search?name=$query');
+    final url = Uri.parse('https://www.thephonepedia.com/api/search?name=$query');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {

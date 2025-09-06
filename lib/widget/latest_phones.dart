@@ -21,7 +21,7 @@ class _LatestPhonesState extends State<LatestPhones> {
   }
 
   Future<List<dynamic>> fetchLatestPhones() async {
-    final url = Uri.parse('https://10.0.2.2:80/api/latest/');
+    final url = Uri.parse('https://www.thephonepedia.com/api/latest/');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -78,12 +78,18 @@ class _LatestPhonesState extends State<LatestPhones> {
                         child: Column(
                           children: [
                             Expanded(
-                              child: Image.network(
-                                "https://10.0.2.2:80/images/${Uri.encodeComponent(phone['image_url'])}" ?? '',
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.broken_image, size: 80, color: Colors.grey),
-                              ),
+                              child: phone['image_url'] != null
+                                  ? Image.network(
+                                      "https://www.thephonepedia.com/images/${Uri.encodeComponent(phone['image_url'])}",
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(Icons.broken_image,
+                                            size: 80, color: Colors.grey);
+                                      },
+                                    )
+                                  : const Icon(Icons.broken_image,
+                                      size: 80, color: Colors.grey),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),

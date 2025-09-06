@@ -11,7 +11,7 @@ class DetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final specsGroups = phone['specs'] as List<dynamic>? ?? [];
     final imageUrl = phone['image_url'] != null
-        ? 'https://10.0.2.2:80/images/${Uri.encodeComponent(phone['image_url'])}'
+        ? 'https://www.thephonepedia.com/images/${Uri.encodeComponent(phone['image_url'])}'
         : null;
 
     return Scaffold(
